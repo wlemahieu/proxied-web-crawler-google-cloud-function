@@ -1,0 +1,13 @@
+{
+  "name": "proxied-web-crawler-google-cloud-function",
+  "version": "1.0.1",
+  "description": "An example of a Google Cloud Function that uses Puppeteer, Chromium and rotating proxy servers to crawl a website to gather targeted resources.",
+  "main": "index.js",
+  "author": "Wesley LeMahieu",
+  "license": "MIT",
+  "dependencies": {
+    "@google-cloud/functions-framework": "^3.1.2",
+    "chromium": "^3.0.3",
+    "puppeteer": "^15.1.0"
+  }
+}
