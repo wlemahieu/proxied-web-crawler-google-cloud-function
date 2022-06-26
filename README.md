@@ -26,8 +26,8 @@
 
 1. **nvm use 16** - Switch to Node 16 (nvm install 16.5.1 if not installed)
 2. **npm install** - Install all node_modules for the GCF
-3. **PROXY_USER=<proxy username> PROXY_PASS=<proxy password> npx @google-cloud/functions-framework --target=run** - Serve the example GCF locally
-4. **http://localhost:8080/** - Visit the locally served GCF
+3. **PROXY_USER=<proxy username> PROXY_PASS=<proxy password> npx @google-cloud/functions-framework --target=run --port=8081** - Serve the example GCF locally.
+4. **http://localhost:8081/** - Visit the locally served GCF. I used 8081 so the sibling-gcf library can run along-side this gcf to test locally.
 
 ##### *A note on easily moving ready components from local to the cloud:
 After cloning this repository, you can upload a zip of the example GCF directory directly to a created Cloud Function. Alternatively, you can manually create & copy GCF files and their contents into your created Cloud Function.
