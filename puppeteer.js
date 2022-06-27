@@ -35,10 +35,10 @@ const initialize = async (headless=false) => {
   const next_header = getNextHeader();
   const next_mesh_proxy = getNextMeshProxy();
   const args = ['--proxy-server=http://' + next_mesh_proxy];
-  const executablePath = await chromium.executablePath;
+  // const executablePath = await chromium.executablePath;
   const browser = await puppeteer.launch({
     args,
-    executablePath,
+    // executablePath,
     headless
   });
   let page;

@@ -17,7 +17,7 @@ functions.http('run', async (req, res) => {
     const values = []; // extracted values
 
     // initialize puppeteer
-    const headless = false;
+    const headless = true;
     const [browser, page] = await initialize(headless);
 
     // iterate through requested elements
