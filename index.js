@@ -43,9 +43,7 @@ const findSelector = async (page, element, values) => {
       value = await page.$eval(element.selector, (e) => fn);
     }
 
-    values.push({
-      [element.key]: value
-    });
+    values[element.key] = value;
 
   } catch (e) {
     console.log(e);
@@ -56,7 +54,7 @@ const findSelector = async (page, element, values) => {
 functions.http('run', async (req, res) => {
   if (req.body.elements) {
     const elements = JSON.parse(req.body.elements);
-    const values = []; // extracted values
+    const values = {}; // extracted values
 
     // initialize puppeteer
     const headless = true;
@@ -71,7 +69,8 @@ functions.http('run', async (req, res) => {
       await finalize(browser);
     }
 
-    res.send({ values });
+    res.send(values);
+
   } else {
     res.send(`Example Web Crawler Extracter Google Cloud Function`);
   }
