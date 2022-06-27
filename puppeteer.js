@@ -31,23 +31,20 @@ const getNextMeshProxy = () => {
   return next_mesh_proxy;
 };
 
-const initialize = async (headless=false) => {
+const initialize = async (headless=true) => {
   const next_header = getNextHeader();
   const next_mesh_proxy = getNextMeshProxy();
-  const args = ['--proxy-server=http://' + next_mesh_proxy];
+  const args = [
+    '--no-sandbox',
+    `--proxy-server=http://${next_mesh_proxy}`,
+  ];
   // const executablePath = await chromium.executablePath;
   const browser = await puppeteer.launch({
     args,
     // executablePath,
     headless
   });
-  let page;
-  try {
-    page = await browser.newPage();
-  } catch (e) {
-    console.log(e);
-    throw e;
-  }
+  const page = await browser.newPage();
   await page.setUserAgent(next_header['user-agent']);
   // set the HTTP Basic Authentication credential
   await page.authenticate({'username': process.env.PROXY_USER, 'password': process.env.PROXY_PASS });
