@@ -17,59 +17,58 @@ const findSelector = async (page, element, values) => {
     await page.waitForSelector(element.selector, { visible: true, timeout: element.timeout });
     console.log('Selector found!');
             
-    let fn, value;
+    let value;
 
     if (element.type === 'multiple') {
       switch (element.eval) {
-        case 'getInnerHTML':
-          fn = items => items.map(item => item.innerHTML);
+        case 'getInnerText':
+          value = await page.$$eval(element.selector, items => items.map(item => item.innerText));
           break;
-        case 'getAttribute':
-          fn = items => items.map(item => item.getAttribute('href')).filter(item => item !== null);
+        case 'getLink':
+          value = await page.$$eval(element.selector, items => items.map(item => item.getAttribute('href')));
           break;
         default:
           throw 'No eval provided!';
       }
-      value = await page.$$eval(element.selector, fn);
     } else if (element.type === 'single') {
       switch (element.eval) {
-        case 'getInnerHTML':
-          fn = (item) => item.innerHTML;
+        case 'getInnerText':
+          value = await page.$eval(element.selector, item => item.innerText);
           break;
-        case 'getAttribute':
-          fn = (item) => item.getAttribute(element.attribute);
+        case 'getLink':
+          value = await page.$eval(element.selector, item => item.getAttribute('href'));
           break;
         default:
           throw 'No eval provided!';
       }
-      value = await page.$eval(element.selector, fn);
     }
 
     values[element.key] = value;
 
   } catch (e) {
-    console.log(`Selector not found.`);
+    console.log(`Selector not found.`, e);
   }
 };
 
 functions.http('run', async (req, res) => {
   if (req.body.elements) {
     const elements = JSON.parse(req.body.elements);
+    const url = req.body.url;
     const values = {}; // extracted values
 
     // initialize puppeteer
     const headless = true;
     const [browser, page] = await initialize(headless);
+    await visitUrl(url, page);
 
     // iterate through requested elements
     for (const key in elements) {
       const element = elements[key];
       console.log('Crawling element through proxy...', element);
-      await visitUrl(element.url, page);
       await findSelector(page, element, values);
-      await finalize(browser);
     }
 
+    await finalize(browser);
     res.send(values);
 
   } else {
