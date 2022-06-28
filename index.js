@@ -16,11 +16,10 @@ const findSelector = async (page, element, values) => {
     console.log(`Waiting for '${element.selector}' selector...`);
     await page.waitForSelector(element.selector, { visible: true, timeout: element.timeout });
     console.log('Selector found!');
-    
-    let value;
+            
+    let fn, value;
 
     if (element.type === 'multiple') {
-      let fn;
       switch (element.eval) {
         case 'getInnerHTML':
           fn = items => items.map(item => item.innerHTML);
@@ -33,20 +32,22 @@ const findSelector = async (page, element, values) => {
       }
       value = await page.$$eval(element.selector, fn);
     } else if (element.type === 'single') {
-      let fn;
       switch (element.eval) {
         case 'getInnerHTML':
           fn = (item) => item.innerHTML;
+          break;
         case 'getAttribute':
           fn = (item) => item.getAttribute(element.attribute);
+          break;
+        default:
+          throw 'No eval provided!';
       }
-      value = await page.$eval(element.selector, (e) => fn);
+      value = await page.$eval(element.selector, fn);
     }
 
     values[element.key] = value;
 
   } catch (e) {
-    console.log(e);
     console.log(`Selector not found.`);
   }
 };
